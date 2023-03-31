@@ -25,6 +25,7 @@ try
 {
 if(input.Title && input.Type)
 {
+console.log(input.Title)
 const heading=['Type'];
 const values=[input.Type];
 var tableheading='';
@@ -101,9 +102,11 @@ port: 5432,
 username: `${process.env.Q_DB_USER}`,
 password: `${process.env.Q_DB_PASSWORD}`,
 dbname: `${process.env.Q_DB}`,
-tableName: 'tasks'
+tableName: 'tasks',
+ssl: {
+    rejectUnauthorized : false
 }
-
+}
 });
 
 const register = asyncHandler(async(req,res)=>{
@@ -195,8 +198,7 @@ res.json({
 });
 
 const checkUploadingStatus = asyncHandler(async(req,res)=>{
-const result = await prisma.$queryRaw`SELECT id FROM public.tasks
-ORDER BY added ASC `;
+const result = []; //await prisma.$queryRaw`SELECT id FROM public.tasks ORDER BY added ASC `;
 res.json({
 "success":true,
 "count":result.length
