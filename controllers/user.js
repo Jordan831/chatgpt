@@ -94,6 +94,7 @@ cb();
 },{
 maxRetries:3,
 afterProcessDelay:20000,
+retryDelay: 40000,
 store: {
 type: 'sql',
 dialect: 'postgres',
