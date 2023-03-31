@@ -198,7 +198,7 @@ res.json({
 });
 
 const checkUploadingStatus = asyncHandler(async(req,res)=>{
-const result = []; //await prisma.$queryRaw`SELECT id FROM public.tasks ORDER BY added ASC `;
+const result = await prisma.$queryRaw`SELECT id FROM public.tasks ORDER BY added ASC `;
 res.json({
 "success":true,
 "count":result.length
