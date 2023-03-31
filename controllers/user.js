@@ -47,7 +47,7 @@ tablevalue = values.length > 1 ? values.join(",") : values[0];
 }
 const suggested_title = await openai.createChatCompletion({
 model: "gpt-3.5-turbo",
-max_tokens: 4000,
+max_tokens: 2000,
 temperature: 0.2,
 messages: [
 {role: "user", 
@@ -58,7 +58,7 @@ if(suggested_title?.data?.choices[0]?.message?.content)
 {
 const completion = await openai.createChatCompletion({
 model: "gpt-3.5-turbo",
-max_tokens: 4000,
+max_tokens: 3500,
 temperature: 0.2,
 messages: [
 {role: "user", 
@@ -93,7 +93,7 @@ console.log(err)
 cb();
 },{
 maxRetries:3,
-afterProcessDelay:3000,
+afterProcessDelay:6000,
 store: {
 type: 'sql',
 dialect: 'postgres',
