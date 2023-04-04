@@ -25,9 +25,9 @@ try
 {
 if(input.Title && input.Type)
 {
-console.log(input.Title)
-const heading=['Type'];
-const values=[input.Type];
+
+const heading=[];
+const values=[];
 var tableheading='';
 var tablevalue='';
 if(input.Tags)
@@ -35,7 +35,7 @@ if(input.Tags)
 var list=input.Tags;
 let t = list.split(",");
 t.map((p)=>{
-if(p.indexOf('Delivery_') !=-1 || p.indexOf('Artform_') !=-1 || p.indexOf('Color_') !=-1 || p.indexOf('Craftmenship_') !=-1 || p.indexOf('Fabric_') !=-1 || p.indexOf('Available Size_') !=-1 )
+if( p.indexOf('Artform_') !=-1 || p.indexOf('Color_') !=-1 || p.indexOf('Craftmenship_') !=-1 || p.indexOf('Fabric_') !=-1 || p.indexOf('Available Size_') !=-1 )
 {
 let value= p.split("_");
 heading.push(value[0]);

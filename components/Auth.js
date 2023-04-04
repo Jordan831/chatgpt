@@ -5,7 +5,7 @@ import {MoonLoader} from "react-spinners";
 
 const Auth = (props)=>{
 const router = useRouter();
-var token = Cookies.get('token') || false;
+var token = Cookies.get('toksy') || false;
 
 const fetcher = (url) => fetch(url,{
 headers: {
