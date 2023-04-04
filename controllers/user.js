@@ -23,7 +23,7 @@ var q = new Queue(async function (input, cb) {
 
 try
 {
-if(input.Title && input.Type)
+if(input.Title)
 {
 
 const heading=[];
@@ -33,6 +33,7 @@ var tablevalue='';
 if(input.Tags)
 {
 var list=input.Tags;
+
 let t = list.split(",");
 t.map((p)=>{
 if( p.indexOf('Artform_') !=-1 || p.indexOf('Color_') !=-1 || p.indexOf('Craftmenship_') !=-1 || p.indexOf('Fabric_') !=-1 || p.indexOf('Available Size_') !=-1 )
@@ -76,10 +77,11 @@ await shopify.graphql(query).then( async(product) =>
 {
 if(product.productByHandle)
 {
-await shopify.product.update(product.productByHandle.legacyResourceId,{
+const p = await shopify.product.update(product.productByHandle.legacyResourceId,{
 'title':suggested_title?.data?.choices[0]?.message?.content.replace(/"/g,""),
 'body_html':completion?.data?.choices[0]?.message?.content
 });
+
 }
 }
 
