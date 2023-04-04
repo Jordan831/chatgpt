@@ -32,11 +32,12 @@ if(decoded)
 const user = await prisma.user.findUnique({where:{
 email: decoded.user.email
 }});
-if(user)
-{
-if(decoded.user.password === user.password  )
-{
+
+if(user.status)
+{    
+
 next()
+
 }
 else
 {
@@ -44,8 +45,7 @@ res.json({
 "success":false,
 "redirect":true,
 "error":"Invalid Token"
-})    
-}
+})  
 }
 }
 });

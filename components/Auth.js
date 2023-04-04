@@ -5,7 +5,7 @@ import {MoonLoader} from "react-spinners";
 
 const Auth = (props)=>{
 const router = useRouter();
-var token = Cookies.get('toksy') || false;
+var token = Cookies.get('token') || false;
 
 const fetcher = (url) => fetch(url,{
 headers: {
@@ -15,6 +15,7 @@ headers: {
 }).then((res) =>{
 return res.json()});
 const { data, error,isLoading } = useSWR('/api/checkauth', fetcher);
+console.log(data)
 if(isLoading)
 {
 return <div className="row">
