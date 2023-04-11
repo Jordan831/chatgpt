@@ -68,7 +68,7 @@ temperature: 0.2,
 messages: [
 {
 role: "user", 
-content: `Write html paragraph code Description for "${input.Title.trim()}" 200 words and add  5 Special Features in html list code and create  Specification  table of two columns add ${tableheading} in first column and add   ${tablevalue} in second column
+content: `Write html paragraph code Description for "${input.Title.trim()}" 200 words and add  5 Special Features in html list code and create  Specification  table of two columns add ${tableheading} in first column and add ${tablevalue} in second column
 `}]
 });
 
