@@ -82,7 +82,7 @@ await shopify.graphql(query).then( async(product) =>
 {
 if(product.productByHandle)
 {
-console.log(suggested_title);
+console.log(suggested_title?.data?.choices[0]?.message);
 const p = await shopify.product.update(product.productByHandle.legacyResourceId,{
 'title':suggested_title?.data?.choices[0]?.message?.content.replace(/"/g,""),
 'body_html':completion?.data?.choices[0]?.message?.content
