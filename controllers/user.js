@@ -8,6 +8,10 @@ import fs from "fs";
 import Queue from "better-queue";
 import { Configuration, OpenAIApi } from "openai";
 import Shopify from "shopify-api-node";
+import parse from "pg-connection-string";
+var parseConnection = parse.parse;
+var config = parseConnection(process.env.DATABASE_URL);
+console.log(config)
 const prisma = new PrismaClient();
 const configuration = new Configuration({
 organization: `${process.env.OPEN_AI_ORGANIZATION_ID}`,
@@ -52,7 +56,7 @@ max_tokens: 2000,
 temperature: 0.2,
 messages: [
 {role: "user", 
-content: `Suggest 60 characters google search professional title for ${input.Title.trim()}`}]
+content: `Suggest 60 characters google search  title for ${input.Title.trim()}`}]
 });
 
 if(suggested_title?.data?.choices[0]?.message?.content)
@@ -62,7 +66,8 @@ model: "gpt-3.5-turbo",
 max_tokens: 3500,
 temperature: 0.2,
 messages: [
-{role: "user", 
+{
+role: "user", 
 content: `Write html paragraph code Description for "${input.Title.trim()}" 200 words and add  5 Special Features in html list code and create  Specification  table of two columns add ${tableheading} in first column and add   ${tablevalue} in second column
 `}]
 });
@@ -100,11 +105,11 @@ retryDelay: 40000,
 store: {
 type: 'sql',
 dialect: 'postgres',
-host: `${process.env.Q_HOST}`,
+host: config.host,
 port: 5432,
-username: `${process.env.Q_DB_USER}`,
-password: `${process.env.Q_DB_PASSWORD}`,
-dbname: `${process.env.Q_DB}`,
+username: config.user,
+password: config.password,
+dbname: config.database,
 tableName: 'tasks',
 ssl: {
     rejectUnauthorized : false
