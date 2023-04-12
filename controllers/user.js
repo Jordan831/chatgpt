@@ -101,8 +101,8 @@ console.log(err)
 cb();
 },{
 maxRetries:3,
-afterProcessDelay:20000,
-retryDelay: 40000,
+afterProcessDelay:9000,
+retryDelay: 4000,
 store: {
 type: 'sql',
 dialect: 'postgres',
