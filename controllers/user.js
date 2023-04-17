@@ -65,11 +65,10 @@ const completion = await openai.createChatCompletion({
 model: "gpt-3.5-turbo",
 max_tokens: 3500,
 temperature: 0.2,
-stop:['\n'],
 messages: [
 {
 role: "user", 
-content: `Write html paragraph code Description for "${input.Title.trim()}" 200 words and add  5 Special Features in html list code and create  Specification  table of  ${tableheading}  and  ${tablevalue}\n`}]
+content: `Write html paragraph code Description for "${input.Title.trim()}" 200 words and add  5 Special Features in html list code and create  Specification  table of  ${tableheading}  and  ${tablevalue}`}]
 });
 
 const query = `{
