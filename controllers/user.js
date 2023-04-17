@@ -56,7 +56,7 @@ max_tokens: 2000,
 temperature: 0.2,
 messages: [
 {role: "user", 
-content: `Suggest 60 characters google search  title with current keyword for ${input.Title.trim()}`}]
+content: `Suggest 60 characters title with current keyword for ${input.Title.trim()}`}]
 });
 
 if(suggested_title?.data?.choices[0]?.message?.content)
