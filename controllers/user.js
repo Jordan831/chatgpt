@@ -68,7 +68,7 @@ temperature: 0.2,
 messages: [
 {
 role: "user", 
-content: `Write html paragraph code Description for "${input.Title.trim()}" 200 words , add  5 Special Features in html list code , "${tableheading}  and  ${tablevalue}" format it as specification table `}]
+content: `Write html paragraph code Description for "${input.Title.trim()}" 200 words and add  5 Special Features in html list code and create specification table of given values "${tableheading}  and  ${tablevalue}"`}]
 });
 
 const query = `{
