@@ -38,6 +38,7 @@ if(input.Tags)
 {
 var list=input.Tags;
 
+var rows='';
 let t = list.split(",");
 t.map((p)=>{
 if( p.indexOf('Artform_') !=-1 || p.indexOf('Color_') !=-1 || p.indexOf('Craftmenship_') !=-1 || p.indexOf('Fabric_') !=-1 || p.indexOf('Available Size_') !=-1 )
@@ -45,8 +46,11 @@ if( p.indexOf('Artform_') !=-1 || p.indexOf('Color_') !=-1 || p.indexOf('Craftme
 let value= p.split("_");
 heading.push(value[0]);
 values.push(value[1]);
+rows+=`<tr><td>${value[0]}</td><td>${value[1]}</td></tr>`
 }
 });
+
+var table = `<table>${rows}</table>`;
 tableheading = heading.length > 1 ? heading.join(",") : heading[0];
 tablevalue = values.length > 1 ? values.join(",") : values[0];
 }
@@ -68,7 +72,7 @@ temperature: 0.2,
 messages: [
 {
 role: "user", 
-content: `Write html paragraph code Description for "${input.Title.trim()}" 200 words and add  5 Special Features in html list code and create specification table of given values "${tableheading}  and  ${tablevalue}"`}]
+content: `Write html paragraph code Description for "${input.Title.trim()}" 200 words and add  5 Special Features in html list code"`}]
 });
 
 const query = `{
@@ -84,7 +88,7 @@ if(product.productByHandle)
 console.log(suggested_title?.data?.choices[0]?.message);
 const p = await shopify.product.update(product.productByHandle.legacyResourceId,{
 'title':suggested_title?.data?.choices[0]?.message?.content.replace(/"/g,""),
-'body_html':completion?.data?.choices[0]?.message?.content
+'body_html':completion?.data?.choices[0]?.message?.content+""+table
 });
 
 }
