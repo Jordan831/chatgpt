@@ -50,7 +50,7 @@ rows+=`<tr><td>${value[0]}</td><td>${value[1]}</td></tr>`
 }
 });
 
-var table = `<table>${rows}</table>`;
+var table = `<table><caption>Specification </caption>${rows}</table>`;
 tableheading = heading.length > 1 ? heading.join(",") : heading[0];
 tablevalue = values.length > 1 ? values.join(",") : values[0];
 }
