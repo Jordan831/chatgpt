@@ -89,6 +89,7 @@ setSend(false)
 }
 if(response.data?.success === true)
 {
+
 setLoading(true);
 setSend(false)
 }
@@ -125,8 +126,8 @@ File Upload
 {errorD ? <div className="alert alert-danger m-4">{errorD}</div>:""}
 </form>
 </div>
-</div>
-</div>
+</div> 
+</div> 
 </Auth>
 </Layout>)
 }

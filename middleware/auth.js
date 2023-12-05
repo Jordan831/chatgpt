@@ -35,7 +35,7 @@ email: decoded.user.email
 
 if(user.status)
 {    
-
+req.user = user;
 next()
 
 }

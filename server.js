@@ -21,8 +21,8 @@ tempFileDir : os.tmpdir()
 app.use("/api",userRouter);
 app.use((err, req, res, next) => {
 if (res.headersSent) {
-return next(err)
-}
+return next(err) 
+}   
 console.log(err)
 if(err.code == "P2002")
 {

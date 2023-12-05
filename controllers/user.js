@@ -8,19 +8,17 @@ import fs from "fs";
 import Queue from "better-queue";
 import { Configuration, OpenAIApi } from "openai";
 import Shopify from "shopify-api-node";
-import parse from "pg-connection-string";
+import parse from "pg-connection-string"; 
+import MemoryStore from 'better-queue-memory'
 var parseConnection = parse.parse;
 var config = parseConnection(process.env.DATABASE_URL);
-console.log(config)
+
 const prisma = new PrismaClient();
 const configuration = new Configuration({
 organization: `${process.env.OPEN_AI_ORGANIZATION_ID}`,
 apiKey: process.env.OPENAI_API_KEY,
 });
-const shopify = new Shopify({
-shopName: `${process.env.SHOPNAME}`,
-accessToken: `${process.env.API_TOKEN}`
-});
+
 
 const openai = new OpenAIApi(configuration);
 var q = new Queue(async function (input, cb) {
@@ -30,6 +28,10 @@ try
 if(input.Title)
 {
 
+const shopify = new Shopify({
+shopName: input.user.shop,
+accessToken: input.user.token
+});
 const heading=[];
 const values=[];
 var tableheading='';
@@ -54,13 +56,14 @@ var table = `<table><caption>Specification </caption>${rows}</table>`;
 tableheading = heading.length > 1 ? heading.join(",") : heading[0];
 tablevalue = values.length > 1 ? values.join(",") : values[0];
 }
+
 const suggested_title = await openai.createChatCompletion({
 model: "gpt-3.5-turbo",
 max_tokens: 2000,
 temperature: 0.2,
 messages: [
 {role: "user", 
-content: `Suggest 60 characters title with current keyword for ${input.Title.trim()}`}]
+content: `write seo title  for ${input.Title.trim()} 50 characters only and add seo keyword at beginning `}]
 });
 
 if(suggested_title?.data?.choices[0]?.message?.content)
@@ -72,7 +75,7 @@ temperature: 0.2,
 messages: [
 {
 role: "user", 
-content: `Write html paragraph code Description for "${input.Title.trim()}" 200 words and add  5 Special Features in html list code"`}]
+content: `Write 200 characters seo  description  for "${input.Title.trim()}"`}]
 });
 
 const query = `{
@@ -85,10 +88,14 @@ await shopify.graphql(query).then( async(product) =>
 {
 if(product.productByHandle)
 {
+console.log("enter")
 console.log(suggested_title?.data?.choices[0]?.message);
+console.log(suggested_title?.data?.choices[0]?.message?.content)
 const p = await shopify.product.update(product.productByHandle.legacyResourceId,{
-'title':suggested_title?.data?.choices[0]?.message?.content.replace(/"/g,""),
-'body_html':completion?.data?.choices[0]?.message?.content+""+table
+
+"metafields_global_description_tag": completion?.data?.choices[0]?.message?.content.replace(/"/g,""),
+"metafields_global_title_tag": suggested_title?.data?.choices[0]?.message?.content.replace(/"/g,"")
+
 });
 
 }
@@ -99,37 +106,39 @@ const p = await shopify.product.update(product.productByHandle.legacyResourceId,
 }
 }
 catch(err){
-console.log(err)
-}
-cb();
+console.log(err?.response)
+}  
+cb(); 
 },{
 maxRetries:3,
 afterProcessDelay:9000,
 retryDelay: 4000,
 store: {
-type: 'sql',
-dialect: 'postgres',
-host: config.host,
-port: 5432,
+type: 'sql', 
+dialect: 'postgres', 
+host: config.host,  
+port: config.port,
 username: config.user,
 password: config.password,
-dbname: config.database,
-tableName: 'tasks',
-ssl: {
-    rejectUnauthorized : false
-}
+dbname: config.database, 
+tableName: 'tasks'
 }
 });
 
+
 const register = asyncHandler(async(req,res)=>{
-const {email,password} = req.body;
+const {email,password,shop,token} = req.body;
+
 const salt = bcrypt.genSaltSync(10);
 const hash = bcrypt.hashSync(password, salt);
-const user = await prisma.user.create({
+
+const user = await prisma.User.create({
 data: {
 email: email,
 password: hash,
-},
+shop:shop,
+token:token
+},  
 })
 
 if(user)
@@ -179,13 +188,15 @@ res.json({
 const upload = asyncHandler(async(req,res)=>{
 
 const filename =  req.files.csv.tempFilePath;
-const supported_file=['text/csv'];
+const supported_file=['text/csv']; 
 if(supported_file.includes(req.files.csv.mimetype))
 {
 
 fs.createReadStream(filename).pipe(csv()).on('data', (data) =>{
-if(data.Handle && data.Title )
+
+if(data.Handle && data.Title !="" )
 {
+data['user']=req.user;
 q.push(data)
 }
 });
@@ -210,7 +221,7 @@ res.json({
 });
 
 const checkUploadingStatus = asyncHandler(async(req,res)=>{
-const result = await prisma.$queryRaw`SELECT id FROM public.tasks ORDER BY added ASC `;
+const result = await prisma.$queryRaw`SELECT id FROM tasks ORDER BY added ASC `;
 res.json({
 "success":true,
 "count":result.length
